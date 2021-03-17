@@ -21,6 +21,7 @@
 
     function createTable(tableData, target) {
       target.append('<table>')
+      let body = $('<tbody>')
       $('table').addClass('table')
       for (let i = 0; i < tableData.length; i++) {
         let row = $('<tr>')
@@ -43,19 +44,53 @@
             });
           })
         }
-
-        $('.table').append(row)
+        body.append(row)
       }
-      createSortArrows(tableData)
+      $('.table').append(body)
+
+      createSortButtons(tableData)
     }
 
-    function createSortArrows(tableData) {
+    function createSortButtons(tableData) {
+
       let row = $('<tr>')
       for (let i = 0; i < tableData.length; i++) {
-        let td = $('<td> <button> Сортировать </button> </td>')
+        let buttonDown = $(`<button>Убывание</button>`)
+        let buttonUp = $(`<button>Возрастание</button>`)
+
+        buttonDown.on('click', function () {
+          sortTable(i, 'down')
+        })
+        buttonUp.on('click', function () {
+          sortTable(i, 'up')
+        })
+
+        let td = $('<td>')
+        td.append(buttonDown, buttonUp)
         row.append(td)
       }
-      $('.table').prepend(row)
+      let head = $('<thead>')
+      head.append(row)
+      $('.table').prepend(head)
+    }
+
+    function sortTable(col, direction) {
+      let tbody = $('.table tbody');
+
+      tbody.find('tr').sort(function (a, b) {
+        let tda = $(a).find(`td:eq(${col}) input`).val();
+        let tdb = $(b).find(`td:eq(${col}) input`).val();
+
+        if (direction === 'down') {
+          return +tda < +tdb ? 1 :
+            +tda > +tdb ? -1 :
+            0;
+        } else if (direction === 'up') {
+          return +tda > +tdb ? 1 :
+            +tda < +tdb ? -1 :
+            0;
+        }
+      }).appendTo(tbody);
     }
 
 
@@ -66,8 +101,7 @@
       matrix = createMatrix(6)
       localStorage.matrix = JSON.stringify(matrix)
     }
-    //console.log()
-    console.log(JSON.parse(JSON.stringify(matrix)))
+
     createTable(matrix, this)
   }
 })(jQuery);
