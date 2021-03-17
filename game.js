@@ -26,7 +26,7 @@
         let row = $('<tr>')
 
         for (let j = 0; j < tableData.length; j++) {
-          const input = $(`<input type="text" disabled value="${tableData[i][j].value}" id="${tableData[i][j].name}">`)
+          const input = $(`<input type="text" data-i=${i} data-j=${j} disabled value="${tableData[i][j].value}" id="${tableData[i][j].name}">`)
           const td = $('<td>').append(input)
           row.append(td)
 
@@ -37,6 +37,8 @@
             targetedInput.on('keypress', function (e) {
               if (e.which === 13) {
                 targetedInput.prop('disabled', true);
+                matrix[targetedInput.data().i][targetedInput.data().j].value = targetedInput.val()
+                localStorage.matrix = JSON.stringify(matrix)
               }
             });
           })
@@ -44,12 +46,28 @@
 
         $('.table').append(row)
       }
+      createSortArrows(tableData)
     }
 
-    const matrix = createMatrix(6)
+    function createSortArrows(tableData) {
+      let row = $('<tr>')
+      for (let i = 0; i < tableData.length; i++) {
+        let td = $('<td> <button> Сортировать </button> </td>')
+        row.append(td)
+      }
+      $('.table').prepend(row)
+    }
 
-    console.log(matrix)
+
+    let matrix = null
+    if (localStorage.matrix) {
+      matrix = JSON.parse(localStorage.matrix)
+    } else {
+      matrix = createMatrix(6)
+      localStorage.matrix = JSON.stringify(matrix)
+    }
+    //console.log()
+    console.log(JSON.parse(JSON.stringify(matrix)))
     createTable(matrix, this)
-
   }
 })(jQuery);
