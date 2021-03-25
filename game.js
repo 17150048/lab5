@@ -39,7 +39,7 @@
               if (e.which === 13) {
                 targetedInput.prop('disabled', true);
                 matrix[targetedInput.data().i][targetedInput.data().j].value = targetedInput.val()
-                localStorage.matrix = JSON.stringify(matrix)
+                updateTableData(JSON.stringify(matrix))
               }
             });
           })
@@ -93,15 +93,41 @@
       }).appendTo(tbody);
     }
 
-
     let matrix = null
-    if (localStorage.matrix) {
-      matrix = JSON.parse(localStorage.matrix)
-    } else {
-      matrix = createMatrix(6)
-      localStorage.matrix = JSON.stringify(matrix)
+    $.get('getData.php', function (data) {
+
+      if (data == "empty") {
+        const size = prompt("Данные в БД отсутствуют. Введите размер таблицы")
+        matrix = createMatrix(+size)
+        saveTableData(JSON.stringify(matrix))
+      } else {
+        const result = JSON.parse(JSON.parse(data)[0]['data'])
+        matrix = result
+      }
+      createTable(matrix, $('body'))
+    })
+
+    function saveTableData(data) {
+      $.ajax({
+        url: "saveData.php",
+        type: "POST",
+        data: {
+          data
+        },
+        success: function (response) {}
+      })
     }
 
-    createTable(matrix, this)
+    function updateTableData(data) {
+      $.ajax({
+        url: "updateTable.php",
+        type: "POST",
+        data: {
+          data
+        },
+        success: function (response) {}
+      })
+    }
+
   }
 })(jQuery);
