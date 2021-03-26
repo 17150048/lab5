@@ -134,5 +134,11 @@
       })
     }
 
+    $('#delete').on('click', function () {
+      $.get('deleteTable.php', function (res) {
+        location.reload()
+      })
+    })
+
   }
 })(jQuery);

@@ -9,10 +9,15 @@
   <link rel="stylesheet" href="style.css">
   <script src="jquery.js"></script>
   <script src="game.js"></script>
+  <style>
+  #delete{
+    margin: 1rem;
+  }
+  </style>
 </head>
 
 <body>
-
+<button id="delete">Удалить таблицу</button>
 </body>
 <script>
   $(document).ready(function () {
