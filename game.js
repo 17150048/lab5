@@ -96,10 +96,15 @@
     let matrix = null
     $.get('getData.php', function (data) {
 
+
       if (data == "empty") {
         const size = prompt("Данные в БД отсутствуют. Введите размер таблицы")
         matrix = createMatrix(+size)
         saveTableData(JSON.stringify(matrix))
+      } else if (JSON.parse(JSON.parse(data)[0]['data']).length == 0) {
+        const size = prompt("Данные в БД отсутствуют. Введите размер таблицы")
+        matrix = createMatrix(+size)
+        updateTableData(JSON.stringify(matrix))
       } else {
         const result = JSON.parse(JSON.parse(data)[0]['data'])
         matrix = result
