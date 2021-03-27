@@ -57,6 +57,9 @@
       for (let i = 0; i < tableData.length; i++) {
         let buttonDown = $(`<button>Убывание</button>`)
         let buttonUp = $(`<button>Возрастание</button>`)
+        
+        let buttonDownLetters = $(`<button>Убывание Буквы</button>`)
+        let buttonUpLetters = $(`<button>Возрастание Буквы</button>`)
 
         buttonDown.on('click', function () {
           sortTable(i, 'down')
@@ -64,9 +67,16 @@
         buttonUp.on('click', function () {
           sortTable(i, 'up')
         })
+        
+        buttonUpLetters.on('click', function () {
+          sortTableLetters(i, 'up')
+        })
+        buttonDownLetters.on('click', function () {
+          sortTableLetters(i, 'down')
+        })
 
         let td = $('<td>')
-        td.append(buttonDown, buttonUp)
+        td.append(buttonDown, buttonUp, buttonDownLetters, buttonUpLetters)
         row.append(td)
       }
       let head = $('<thead>')
@@ -88,6 +98,25 @@
         } else if (direction === 'up') {
           return +tda > +tdb ? 1 :
             +tda < +tdb ? -1 :
+            0;
+        }
+      }).appendTo(tbody);
+    }
+    
+    function sortTableLetters(col, direction) {
+      let tbody = $('.table tbody');
+
+      tbody.find('tr').sort(function (a, b) {
+        let tda = $(a).find(`td:eq(${col}) input`).val();
+        let tdb = $(b).find(`td:eq(${col}) input`).val();
+
+        if (direction === 'down') {
+          return tda < tdb ? 1 :
+            tda > tdb ? -1 :
+            0;
+        } else if (direction === 'up') {
+          return tda > tdb ? 1 :
+            tda < tdb ? -1 :
             0;
         }
       }).appendTo(tbody);
